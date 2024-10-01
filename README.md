@@ -8,6 +8,7 @@ Builds docker image
 ### Parameters
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
+|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
 |`context`|Path to dir containing Dockerfile.|`true`|`src/`|`.`|
 |`tag`|Name of created image.|`true`|`ghcr.io/m-wrzesien/app:latest`|`null`|
 
@@ -17,6 +18,7 @@ Logins to registry. Was tested on ghcr.io (aka GitHub Packages)
 ### Parameters
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
+|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
 |`registry`|URL or a hostname of registry.|`true`|`ghcr.io`|`null`|
 |`username`|Username of user used for loggin in.|`true`|`user`|`null`|
 |`password`|Password of user used for loggin in.|`true`|`${{ secrets.GITHUB_TOKEN }}`|`null`|
@@ -27,6 +29,7 @@ Pushes **existing** image to registry.
 ### Parameters
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
+|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
 |`tag`|Name of created image.|`true`|`ghcr.io/m-wrzesien/app:latest`|`null`|
 ### Output
 |Name|Description|Example value|
