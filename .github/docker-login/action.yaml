@@ -1,0 +1,23 @@
+name: "Docker registry login"
+description: Login to docker registry.
+inputs:
+  registry:
+    description: URL or a hostname of registry
+    required: true
+  username:
+    description: Username of user used for loggin in
+    required: true
+  password:
+    description: Password of user used for loggin in
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Login to registry
+      shell: bash
+      env:
+        REGISTRY: ${{ inputs.registry }}
+        USERNAME: ${{ inputs.username }}
+        PASSWORD: ${{ inputs.password }}
+      run: ${{ github.action_path }}/script.sh

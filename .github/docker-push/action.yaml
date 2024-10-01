@@ -1,0 +1,15 @@
+name: "Docker push"
+description: Pushes docker image.
+inputs:
+  tag:
+    description: Name of image to push. It needs to created using other actions (like docker-build).
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Push image
+      shell: bash
+      env:
+        TAG: ${{ inputs.tag }}
+      run: ${{ github.action_path }}/script.sh
