@@ -1,10 +1,6 @@
 name: "Docker push"
 description: Pushes docker image.
 inputs:
-  debug:
-    description: Enable debug in action.
-    default: "false"
-    required: true
   tag:
     description: Name of image to push. It needs to created using other actions (like docker-build).
     required: true
@@ -19,7 +15,6 @@ runs:
     - name: Push image
       shell: bash
       env:
-        DEBUG: ${{ inputs.debug }}
         TAG: ${{ inputs.tag }}
       run: ${{ github.action_path }}/script.sh
       id: shell

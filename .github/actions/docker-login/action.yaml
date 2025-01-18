@@ -1,10 +1,6 @@
 name: "Docker registry login"
 description: Login to docker registry.
 inputs:
-  debug:
-    description: Enable debug in action.
-    default: "false"
-    required: true
   registry:
     description: URL or a hostname of registry
     required: true
@@ -21,7 +17,6 @@ runs:
     - name: Login to registry
       shell: bash
       env:
-        DEBUG: ${{ inputs.debug }}
         REGISTRY: ${{ inputs.registry }}
         USERNAME: ${{ inputs.username }}
         PASSWORD: ${{ inputs.password }}

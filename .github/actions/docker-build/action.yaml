@@ -1,10 +1,6 @@
 name: "Docker build"
 description: Build docker image.
 inputs:
-  debug:
-    description: Enable debug in action.
-    default: "false"
-    required: true
   context:
     description: Path to dir containing Dockerfile.
     default: .
@@ -19,7 +15,6 @@ runs:
     - name: Build image
       shell: bash
       env:
-        DEBUG: ${{ inputs.debug }}
         CONTEXT: ${{ inputs.context }}
         TAG: ${{ inputs.tag }}
       run: ${{ github.action_path }}/script.sh

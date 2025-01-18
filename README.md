@@ -19,8 +19,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    with:
-      debug: ${{ secrets.ACTIONS_STEP_DEBUG }}
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
       ssh-key-gitops-repo: ${{ secrets.CI_CD_WORKFLOW_KEY }}
@@ -29,9 +27,10 @@ jobs:
 #### Inputs
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
-|`app`|Enable debug in action.|`false`|`example`|`${{ github.event.repository.name }}`|
-|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
+|`app`|Name of app, which will be used in commit message and `gitops-file` default value.|`false`|`example`|`${{ github.event.repository.name }}`|
 |`gitops-file`|Path to file which will have changed reference to new docker tag.|`false`|`some/path/values.yaml`|`k8s/apps/{app}/values.yaml`|
+|`gitops-repo`|Github repo.|`false`|`m-wrzesien/gh-actions`.|`m-wrzesien/infra`|
+|`gitops-repo-branch`|Branch that will be used in `gitops-repo`.|`false`|`dev`|`master`|
 |`image-name`|Name of repo.|`false`|`m-wrzesien/gh-actions`|`${{ github.repository }}`|
 |`image-tag`|Tag which will be used by image.|`false`|`dev`|`(github.ref == 'refs/heads/master' && format('b{0}', github.run_number) \|\| format('pr{0}-b{1}',github.event.number, github.run_number))`|
 |`mode`|Whether it workflow will be run in `pr` mode (only build image) or in `merged` mode (do whole workflow).|`false`|`pr`|`${{ (github.ref == 'refs/heads/master' && 'merge' \|\| 'pr') }}`|
@@ -52,7 +51,6 @@ Builds docker image
 #### Inputs
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
-|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
 |`context`|Path to dir containing Dockerfile.|`true`|`src/`|`.`|
 |`tag`|Name of created image.|`true`|`ghcr.io/m-wrzesien/app:latest`|`null`|
 
@@ -62,7 +60,6 @@ Logins to registry. Was tested on ghcr.io (aka GitHub Packages)
 #### Inputs
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
-|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
 |`registry`|URL or a hostname of registry.|`true`|`ghcr.io`|`null`|
 |`username`|Username of user used for loggin in.|`true`|`user`|`null`|
 |`password`|Password of user used for loggin in.|`true`|`${{ secrets.GITHUB_TOKEN }}`|`null`|
@@ -73,7 +70,6 @@ Pushes **existing** image to registry.
 #### Inputs
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
-|`debug`|Enable debug in action.|`false`|`${{ secrets.ACTIONS_STEP_DEBUG }}`|`false`|
 |`tag`|Name of created image.|`true`|`ghcr.io/m-wrzesien/app:latest`|`null`|
 #### Output
 |Name|Description|Example value|

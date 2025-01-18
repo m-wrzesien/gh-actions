@@ -5,9 +5,6 @@ on:
       app:
         required: false
         type: string
-      debug:
-        required: false
-        type: boolean
       gitops-file:
         required: false
         type: string
@@ -62,7 +59,6 @@ jobs:
       - name: Log in to the Container registry
         uses: m-wrzesien/gh-actions/.github/actions/docker-login@master
         with:
-          debug: ${{ inputs.debug }}
           registry: ${{ inputs.registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.token }}
@@ -70,14 +66,12 @@ jobs:
       - name: Build Docker image
         uses: m-wrzesien/gh-actions/.github/actions/docker-build@master
         with:
-          debug: ${{ inputs.debug }}
           tag: ${{ env.FULL_IMAGE_NAME }}
 
       - name: Push Docker image if branch is master
         if: env.MODE == 'merge'
         uses: m-wrzesien/gh-actions/.github/actions/docker-push@master
         with:
-          debug: ${{ inputs.debug }}
           tag: ${{ env.FULL_IMAGE_NAME }}
         id: docker_push
 
