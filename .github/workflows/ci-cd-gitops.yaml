@@ -1,0 +1,108 @@
+name: CI/CD with GitOps
+on:
+  workflow_call:
+    inputs:
+      app:
+        required: false
+        type: string
+      debug:
+        required: false
+        type: boolean
+      gitops-file:
+        required: false
+        type: string
+      gitops-repo:
+        required: false
+        default: 'm-wrzesien/infra'
+        type: string
+      gitops-repo-branch:
+        required: false
+        type: string
+      image-name:
+        required: false
+        type: string
+      image-tag:
+        required: false
+        type: string
+      mode:
+        required: false
+        type: string
+      registry:
+        required: false
+        default: 'ghcr.io'
+        type: string
+    secrets:
+      token:
+        description: Github token used for reading repo with code and pushing docker image
+        required: true
+      ssh-key-gitops-repo:
+        required: true
+        description: SSH key used for writing to repo containg yaml files with docker images
+
+env:
+  APP: ${{ inputs.app != '' && inputs.app || github.event.repository.name }}
+  GITOPS_FILE: ${{ inputs.gitops-file != '' && inputs.gitops-file || format('k8s/apps/{0}/values.yaml', github.event.repository.name) }}
+  GITOPS_REPO_ROOT_PATH: gitops
+  IMAGE_NAME: ${{ inputs.image-name != '' && inputs.image-name || github.repository }}
+  IMAGE_TAG: ${{ inputs.image-tag != '' && inputs.image-tag || (github.ref == 'refs/heads/master' && format('b{0}', github.run_number) || format('pr{0}-b{1}',github.event.number, github.run_number)) }}
+  MODE: ${{ inputs.mode != '' && inputs.mode || (github.ref == 'refs/heads/master' && 'merge' || 'pr') }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare env variables
+        run: |
+          echo "FULL_IMAGE_NAME=${{ inputs.registry }}/$IMAGE_NAME:$IMAGE_TAG" >> $GITHUB_ENV
+          echo "GITOPS_REPO_FILE=$GITOPS_REPO_ROOT_PATH/$GITOPS_FILE" >> $GITHUB_ENV
+
+      - name: Check out repository code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Log in to the Container registry
+        uses: m-wrzesien/gh-actions/.github/actions/docker-login@master
+        with:
+          debug: ${{ inputs.debug }}
+          registry: ${{ inputs.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.token }}
+
+      - name: Build Docker image
+        uses: m-wrzesien/gh-actions/.github/actions/docker-build@master
+        with:
+          debug: ${{ inputs.debug }}
+          tag: ${{ env.FULL_IMAGE_NAME }}
+
+      - name: Push Docker image if branch is master
+        if: env.MODE == 'merge'
+        uses: m-wrzesien/gh-actions/.github/actions/docker-push@master
+        with:
+          debug: ${{ inputs.debug }}
+          tag: ${{ env.FULL_IMAGE_NAME }}
+        id: docker_push
+
+      - name: Check out gitops repo
+        if: env.MODE == 'merge'
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          path: ${{ env.GITOPS_REPO_ROOT_PATH }}
+          ref: ${{ inputs.gitops-repo-branch }}
+          repository: ${{ inputs.gitops-repo }}
+          ssh-key: ${{ secrets.ssh-key-gitops-repo }}
+
+      - name: Bump app version in provided file
+        if: env.MODE == 'merge'
+        uses: mikefarah/yq@v4.45.1
+        env:
+          TAG: ${{ env.IMAGE_TAG }}@${{ steps.docker_push.outputs.digest }}
+        with:
+          cmd: yq -i '.image.tag = strenv(TAG)' $GITOPS_REPO_FILE
+
+      - name: Send commit back to gitops repo
+        if: env.MODE == 'merge'
+        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5
+        with:
+          branch: ${{ inputs.gitops-repo-branch }}
+          commit_message: "chore(k8s): Update ${{ env.APP }} docker tag to ${{ env.IMAGE_TAG }}@:${{ steps.docker_push.outputs.digest }}"
+          file_pattern: ${{ env.GITOPS_FILE }}
+          repository: ${{ env.GITOPS_REPO_ROOT_PATH }}
