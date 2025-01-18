@@ -45,7 +45,7 @@ env:
   MODE: ${{ inputs.mode != '' && inputs.mode || (github.ref == 'refs/heads/master' && 'merge' || 'pr') }}
 
 jobs:
-  build-and-deploy:
+  job:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare env variables
