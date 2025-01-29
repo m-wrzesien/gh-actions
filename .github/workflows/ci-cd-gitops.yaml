@@ -5,6 +5,10 @@ on:
       app:
         required: false
         type: string
+      context:
+        required: false
+        default: '.'
+        type: string
       gitops-file:
         required: false
         type: string
@@ -66,6 +70,7 @@ jobs:
       - name: Build Docker image
         uses: m-wrzesien/gh-actions/.github/actions/docker-build@master
         with:
+          context: ${{ inputs.context }}
           tag: ${{ env.FULL_IMAGE_NAME }}
 
       - name: Push Docker image if branch is master

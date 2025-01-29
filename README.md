@@ -28,6 +28,7 @@ jobs:
 |Name|Description|Required?|Example value|Default value|
 |-|-|-|-|-|
 |`app`|Name of app, which will be used in commit message and `gitops-file` default value.|`false`|`example`|`${{ github.event.repository.name }}`|
+|`context`|Path to dir containing Dockerfile.|`false`|`src/`|`.`|
 |`gitops-file`|Path to file which will have changed reference to new docker tag.|`false`|`some/path/values.yaml`|`k8s/apps/{app}/values.yaml`|
 |`gitops-repo`|Github repo.|`false`|`m-wrzesien/gh-actions`.|`m-wrzesien/infra`|
 |`gitops-repo-branch`|Branch that will be used in `gitops-repo`.|`false`|`dev`|`master`|
