@@ -100,7 +100,7 @@ jobs:
           POINTER: ${{ inputs.gitops-file-tag-pointer }}
           TAG: ${{ env.IMAGE_TAG }}@${{ steps.docker_push.outputs.digest }}
         with:
-          cmd: yq -i 'strenv(POINTER) = strenv(TAG)' $GITOPS_REPO_FILE
+          cmd: yq -i 'eval(strenv(POINTER)) = strenv(TAG)' $GITOPS_REPO_FILE
 
       - name: Send commit back to gitops repo
         if: env.MODE == 'merge'
