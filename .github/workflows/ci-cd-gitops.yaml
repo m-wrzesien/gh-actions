@@ -12,6 +12,10 @@ on:
       gitops-file:
         required: false
         type: string
+      gitops-file-tag-pointer:
+        required: false
+        default: '.image.tag'
+        type: string
       gitops-repo:
         required: false
         default: 'm-wrzesien/infra'
@@ -93,9 +97,10 @@ jobs:
         if: env.MODE == 'merge'
         uses: mikefarah/yq@v4.45.1
         env:
+          POINTER: ${{ inputs.gitops-file-tag-pointer }}
           TAG: ${{ env.IMAGE_TAG }}@${{ steps.docker_push.outputs.digest }}
         with:
-          cmd: yq -i '.image.tag = strenv(TAG)' $GITOPS_REPO_FILE
+          cmd: yq -i 'strenv(POINTER) = strenv(TAG)' $GITOPS_REPO_FILE
 
       - name: Send commit back to gitops repo
         if: env.MODE == 'merge'
