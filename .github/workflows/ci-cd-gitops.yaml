@@ -22,6 +22,7 @@ on:
         type: string
       gitops-repo-branch:
         required: false
+        default: 'master'
         type: string
       image-name:
         required: false
