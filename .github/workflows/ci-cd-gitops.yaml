@@ -108,6 +108,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5
         with:
           branch: ${{ inputs.gitops-repo-branch }}
-          commit_message: "chore(k8s): Update ${{ env.APP }} docker tag to ${{ env.IMAGE_TAG }}@:${{ steps.docker_push.outputs.digest }}"
+          commit_message: "chore(k8s): Update ${{ env.APP }} docker tag to ${{ env.IMAGE_TAG }}@${{ steps.docker_push.outputs.digest }}"
           file_pattern: ${{ env.GITOPS_FILE }}
           repository: ${{ env.GITOPS_REPO_ROOT_PATH }}
