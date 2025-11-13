@@ -118,7 +118,7 @@ jobs:
           ref: ${{ inputs.gitops-repo-branch }}
           repository: ${{ inputs.gitops-repo }}
           ssh-key: ${{ secrets.ssh-key-gitops-repo }}
-          persist-credentials: false
+          persist-credentials: true # required, as git-auto-commit-action needs to send the commit back
 
       - name: Bump app version in provided file
         if: env.MODE == 'merge'
