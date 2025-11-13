@@ -15,6 +15,7 @@ runs:
     - name: Build image
       shell: bash
       env:
+        ACTION_PATH: ${{ github.action_path }}
         CONTEXT: ${{ inputs.context }}
         TAG: ${{ inputs.tag }}
-      run: ${{ github.action_path }}/script.sh
+      run: ${ACTION_PATH}/script.sh

@@ -17,7 +17,8 @@ runs:
     - name: Login to registry
       shell: bash
       env:
+        ACTION_PATH: ${{ github.action_path }}
         REGISTRY: ${{ inputs.registry }}
         USERNAME: ${{ inputs.username }}
         PASSWORD: ${{ inputs.password }}
-      run: ${{ github.action_path }}/script.sh
+      run: ${ACTION_PATH}/script.sh

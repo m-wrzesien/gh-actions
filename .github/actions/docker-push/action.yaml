@@ -15,6 +15,7 @@ runs:
     - name: Push image
       shell: bash
       env:
+        ACTION_PATH: ${{ github.action_path }}
         TAG: ${{ inputs.tag }}
-      run: ${{ github.action_path }}/script.sh
+      run: ${ACTION_PATH}/script.sh
       id: shell
