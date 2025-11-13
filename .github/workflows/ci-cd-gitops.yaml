@@ -75,21 +75,21 @@ jobs:
           persist-credentials: false
 
       - name: Log in to the Container registry
-        uses: .github/actions/docker-login
+        uses: ./.github/actions/docker-login
         with:
           registry: ${{ inputs.registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.token }}
 
       - name: Build Docker image
-        uses: .github/actions/docker-build
+        uses: ./.github/actions/docker-build
         with:
           context: ${{ inputs.context }}
           tag: ${{ env.FULL_IMAGE_NAME }}
 
       - name: Push Docker image if branch is master
         if: env.MODE == 'merge'
-        uses: .github/actions/docker-push
+        uses: ./.github/actions/docker-push
         with:
           tag: ${{ env.FULL_IMAGE_NAME }}
         id: docker_push
