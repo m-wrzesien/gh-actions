@@ -131,7 +131,7 @@ jobs:
 
       - name: Send commit back to gitops repo
         if: env.MODE == 'merge'
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
           branch: ${{ inputs.gitops-repo-branch }}
           commit_message: "chore(k8s): Update ${{ env.APP }} docker tag to ${{ env.IMAGE_TAG }}@${{ steps.docker_push.outputs.digest }}"
