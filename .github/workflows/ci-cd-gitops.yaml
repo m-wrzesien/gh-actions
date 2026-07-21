@@ -78,12 +78,12 @@ jobs:
           echo "GITOPS_REPO_FILE=${GITOPS_REPO_ROOT_PATH}/${GITOPS_FILE}" >> $GITHUB_ENV
 
       - name: Check out repository code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Check out gh-actions code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: gh-actions # as `uses` can't use variables/templates, this is specified as literal string
           ref: ${{ inputs.gh-actions-repo-branch }}
@@ -112,7 +112,7 @@ jobs:
 
       - name: Check out gitops repo
         if: env.MODE == 'merge'
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           path: ${{ env.GITOPS_REPO_ROOT_PATH }}
           ref: ${{ inputs.gitops-repo-branch }}
