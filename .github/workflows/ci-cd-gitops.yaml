@@ -122,7 +122,7 @@ jobs:
 
       - name: Bump app version in provided file
         if: env.MODE == 'merge'
-        uses: mikefarah/yq@1b9b4ac5187171d2e5e3129be0cfa827c7f9d53d # v4.53.3
+        uses: mikefarah/yq@e95064cd018c0e3d71ef83e4272b4722571dfa64 # v4.53.5
         env:
           POINTER: ${{ inputs.gitops-file-tag-pointer }}
           TAG: ${{ env.IMAGE_TAG }}@${{ steps.docker_push.outputs.digest }}
